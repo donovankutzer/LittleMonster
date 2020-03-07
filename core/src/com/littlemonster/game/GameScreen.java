@@ -20,6 +20,7 @@ public class GameScreen implements Screen {
 
 	Texture dropImage;
 	Texture bucketImage;
+	Texture backgroundImage;
 
 	OrthographicCamera camera;
 	Rectangle bucket;
@@ -33,11 +34,12 @@ public class GameScreen implements Screen {
 		// load the images for the droplet and the bucket, 64x64 pixels each
 		dropImage = new Texture(Gdx.files.internal("badlogic.jpg"));
 		bucketImage = new Texture(Gdx.files.internal("badlogic.jpg"));
+		backgroundImage = new Texture(Gdx.files.internal("MainScreen.jpg"));
 
 
 		// create the camera and the SpriteBatch
 		camera = new OrthographicCamera();
-		camera.setToOrtho(false, 800, 480);
+		camera.setToOrtho(false, 800, 600);
 
 		// create a Rectangle to logically represent the bucket
 		bucket = new Rectangle();
@@ -48,9 +50,8 @@ public class GameScreen implements Screen {
 		bucket.height = 64;
 
 		// create the raindrops array and spawn the first raindrop
-		raindrops = new Array<Rectangle>();
+		raindrops = new Array<>();
 		spawnRaindrop();
-
 	}
 
 	private void spawnRaindrop() {
@@ -82,7 +83,9 @@ public class GameScreen implements Screen {
 		// begin a new batch and draw the bucket and
 		// all drops
 		game.batch.begin();
+		game.batch.draw(backgroundImage, 0, 0, 800, 600);
 		game.font.draw(game.batch, "Drops Collected: " + dropsGathered, 0, 480);
+		game.font.draw(game.batch, "Pet name: " + game.pet.getName(), 400, 480);
 		game.batch.draw(bucketImage, bucket.x, bucket.y, bucket.width, bucket.height);
 		for (Rectangle raindrop : raindrops) {
 			game.batch.draw(dropImage, raindrop.x, raindrop.y, raindrop.width, raindrop.height);
@@ -155,6 +158,7 @@ public class GameScreen implements Screen {
 	public void dispose() {
 		dropImage.dispose();
 		bucketImage.dispose();
+		backgroundImage.dispose();
 
 	}
 
