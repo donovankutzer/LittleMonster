@@ -10,6 +10,7 @@ public class DesktopLauncher {
 		config.title = "Little Monster";
 		config.width = 800;
 		config.height = 600;
+		config.forceExit = false;
 		new LwjglApplication(new LittleMonster(), config);
 	}
 }

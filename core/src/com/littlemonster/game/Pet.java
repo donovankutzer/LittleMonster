@@ -2,7 +2,6 @@ package com.littlemonster.game;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -18,7 +17,6 @@ public class Pet {
     int hygiene = 5;
     int age = 0;
     int weight = 0;
-
 
     public int getWeight() {
         return weight;
@@ -76,9 +74,66 @@ public class Pet {
         this.age = age;
     }
 
-    public int giveFood(Food food){
+    public boolean giveFood(FoodType food){
 
-        return 0;
+        if (hunger >= 10){
+            return false;
+        }
+
+        switch(food){
+            case Bread:
+                energy += 2;
+                weight += 1;
+                happiness += 1;
+                hunger += 3;
+                break;
+            case Broccoli:
+                energy += 3;
+                weight += 1;
+                happiness -= 1;
+                hunger += 3;
+                break;
+            case Chicken:
+                energy += 3;
+                weight += 2;
+                happiness += 2;
+                hunger += 4;
+                break;
+            case Eggs:
+                energy += 2;
+                weight += 1;
+                hunger += 4;
+                break;
+            case Liver:
+                energy += 4;
+                weight += 1;
+                happiness -= 2;
+                hunger += 2;
+            case Candy:
+                energy += 3;
+                weight += 5;
+                happiness += 5;
+                break;
+            case Chocolate:
+                energy += 5;
+                weight += 5;
+                happiness += 5;
+                hunger += 1;
+                break;
+        }
+
+        if (hunger > 10){
+            hunger = 10;
+        }
+        return true;
+    }
+
+    public void giveHappiness(int amount){
+        happiness += amount;
+    }
+
+    public void giveWeight(int amount){
+        weight += amount;
     }
 
     public void loadPet() throws IOException {
@@ -92,7 +147,6 @@ public class Pet {
         setHunger(Integer.parseInt(data[4]));
         setHygiene(Integer.parseInt(data[5]));
         setWeight(Integer.parseInt(data[6]));
-        return;
     }
 
     public void savePet(){

@@ -17,29 +17,35 @@ import java.util.Iterator;
 
 public class GameScreen implements Screen {
 	final LittleMonster game;
+	final long time = 25000;
 
-	Texture dropImage;
-	Texture bucketImage;
-	Texture backgroundImage;
-
+	private Texture dropImage;
+	private Texture bucketImage;
+	private Texture backgroundImage;
+	
 	OrthographicCamera camera;
 	Rectangle bucket;
 	Array<Rectangle> raindrops;
 	long lastDropTime;
 	int dropsGathered;
+	long startTime, curTime, remainingTime;
+
+
 
 	public GameScreen(final LittleMonster game) {
 		this.game = game;
 
 		// load the images for the droplet and the bucket, 64x64 pixels each
-		dropImage = new Texture(Gdx.files.internal("badlogic.jpg"));
-		bucketImage = new Texture(Gdx.files.internal("badlogic.jpg"));
-		backgroundImage = new Texture(Gdx.files.internal("MainScreen.jpg"));
+		dropImage = new Texture(Gdx.files.internal("apple.png"));
+		bucketImage = new Texture(Gdx.files.internal("baby.png"));
+		backgroundImage = new Texture(Gdx.files.internal("MainScreen.png"));
 
 
 		// create the camera and the SpriteBatch
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, 800, 600);
+
+		startTime = System.currentTimeMillis();
 
 		// create a Rectangle to logically represent the bucket
 		bucket = new Rectangle();
@@ -66,6 +72,13 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void render(float delta) {
+		curTime = System.currentTimeMillis();
+		remainingTime = (time - (curTime - startTime)) / 1000;
+		System.out.println((curTime - startTime) / 1000);
+
+		if (remainingTime <= 0){
+			giveRewards();
+		}
 		// clear the screen with a dark blue color. The
 		// arguments to glClearColor are the red, green
 		// blue and alpha component in the range [0,1]
@@ -85,12 +98,11 @@ public class GameScreen implements Screen {
 		game.batch.begin();
 		game.batch.draw(backgroundImage, 0, 0, 800, 600);
 		game.font.draw(game.batch, "Drops Collected: " + dropsGathered, 0, 480);
-		game.font.draw(game.batch, "Pet name: " + game.pet.getName(), 400, 480);
 		game.batch.draw(bucketImage, bucket.x, bucket.y, bucket.width, bucket.height);
 		for (Rectangle raindrop : raindrops) {
 			game.batch.draw(dropImage, raindrop.x, raindrop.y, raindrop.width, raindrop.height);
 		}
-		game.font.draw(game.batch, Integer.toString(Gdx.graphics.getFramesPerSecond()), 200, 480);
+		game.font.draw(game.batch, Long.toString(remainingTime), 300, 480);
 		game.batch.end();
 
 		// process user input
@@ -129,6 +141,32 @@ public class GameScreen implements Screen {
 				iter.remove();
 			}
 		}
+	}
+
+	public void giveRewards(){
+		System.out.println(dropsGathered);
+		game.setScreen(new MainScreen(game));
+		if (dropsGathered < 10){
+			game.pet.giveHappiness(1);
+			game.pet.giveWeight(-1);
+		}
+		else if (dropsGathered < 20){
+			game.pet.giveHappiness(2);
+			game.pet.giveWeight(-2);
+		}
+		else if (dropsGathered < 30){
+			game.pet.giveHappiness(3);
+			game.pet.giveWeight(-3);
+		}
+		else if (dropsGathered < 40){
+			game.pet.giveHappiness(4);
+			game.pet.giveWeight(-4);
+		}
+		else {
+			game.pet.giveHappiness(5);
+			game.pet.giveWeight(-5);
+		}
+
 	}
 
 	@Override

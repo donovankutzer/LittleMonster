@@ -1,7 +1,10 @@
 package com.littlemonster.game;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
@@ -24,9 +27,10 @@ public class LittleMonster extends Game {
 
 		// Batch to draw all fonts onto
 		batch = new SpriteBatch();
-		// Use LibGDX's default Arial font.
-		// TODO CHANGE TO COOL FONT
-		font = new BitmapFont();
+
+		font = new BitmapFont(Gdx.files.internal("font.fnt"));
+		font.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+		font.getData().setScale(0.80f);
 
 		// Loads pet if played before
 		pet = new Pet();
@@ -38,6 +42,7 @@ public class LittleMonster extends Game {
 
 		// Set screen to main screen
 		this.setScreen(new MainScreen(this));
+
 	}
 
 	public void render() {
@@ -47,5 +52,11 @@ public class LittleMonster extends Game {
 	public void dispose() {
 		batch.dispose();
 		font.dispose();
+		this.getScreen().dispose();
+	}
+
+	public void close(){
+		pet.savePet();
+		Gdx.app.exit();
 	}
 }
