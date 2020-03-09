@@ -1,0 +1,89 @@
+package com.littlemonster.game;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+
+public class MenuButtonsScreen extends Stage {
+    LittleMonster game;
+    MainScreen mainScreen;
+
+    Texture bgImage;
+    Image background;
+    TextButton gameButton, feedButton, flushButton, sleepButton;
+
+    public MenuButtonsScreen(LittleMonster game, MainScreen mainScreen){
+        this.game = game;
+        this.mainScreen = mainScreen;
+
+        // Set background image
+        bgImage = new Texture(Gdx.files.internal("MainScreen.png"));
+        background = new Image(bgImage);
+        background.setPosition(0, 0);
+        addActor(background);
+        drawMenuButtons();
+    }
+
+    public void drawMenuButtons(){
+
+        // BUTTONS FOR MAIN STAGE
+
+        gameButton = new TextButton("Play Game", game.skin);
+        gameButton.setPosition((int)((LittleMonster.V_WIDTH * 3 / 8) - gameButton.getWidth() / 2), 40);
+        gameButton.setVisible(true);
+        gameButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                game.setScreen(new GameScreen(game));
+            }
+        });
+
+        // Button for feeding
+        feedButton = new TextButton("Feed Pet", game.skin);
+        feedButton.setPosition((int)((LittleMonster.V_WIDTH * 5 / 8) - feedButton.getWidth() / 2), 40);
+        feedButton.setVisible(true);
+        feedButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                System.out.println("Screen to main!");
+                mainScreen.changeStage(StageType.MainStage);
+            }
+        });
+
+        // Button for feeding
+        flushButton = new TextButton("Flush Toilet", game.skin);
+
+        flushButton.setPosition((LittleMonster.V_WIDTH * 7 / 8) - flushButton.getWidth() / 2, 40);
+        flushButton.setVisible(true);
+        flushButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                System.out.println("Flushed!");
+                game.pet.setHygiene(10);
+            }
+        });
+
+        // Button for feeding
+        sleepButton = new TextButton("Sleep", game.skin);
+
+        sleepButton.setPosition((LittleMonster.V_WIDTH * 1 / 8) - sleepButton.getWidth() / 2, 40);
+        sleepButton.setVisible(true);
+        sleepButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                game.pet.setEnergy(10);
+                System.out.println("Pet fully rested");
+            }
+        });
+
+        addActor(gameButton);
+        addActor(feedButton);
+        addActor(flushButton);
+        addActor(sleepButton);
+
+    }
+}

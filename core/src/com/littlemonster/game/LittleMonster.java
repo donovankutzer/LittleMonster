@@ -3,10 +3,14 @@ package com.littlemonster.game;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 
 import java.io.IOException;
 
@@ -17,6 +21,9 @@ public class LittleMonster extends Game {
 	public SpriteBatch batch;
 	public BitmapFont font;
 	public Pet pet;
+	public Skin skin;
+	public Pixmap pixmap;
+	public TextButton.TextButtonStyle textButtonStyle;
 
 
 	public void create() {
@@ -31,6 +38,18 @@ public class LittleMonster extends Game {
 		font = new BitmapFont(Gdx.files.internal("font.fnt"));
 		font.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
 		font.getData().setScale(0.80f);
+
+		skin = new Skin();
+		pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
+		pixmap.setColor(Color.CLEAR);
+		pixmap.fill();
+		skin.add("clear", new Texture(pixmap));
+		skin.add("default", font);
+
+		textButtonStyle = new TextButton.TextButtonStyle();
+		textButtonStyle.up = skin.newDrawable("clear", new Color(0, 0, 0, 0));
+		textButtonStyle.font = skin.getFont("default");
+		skin.add("default", textButtonStyle);
 
 		// Loads pet if played before
 		pet = new Pet();

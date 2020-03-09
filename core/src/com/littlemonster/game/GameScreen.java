@@ -34,24 +34,19 @@ public class GameScreen implements Screen {
 
 	public GameScreen(final LittleMonster game) {
 		this.game = game;
+		camera = game.camera;
+
+		startTime = System.currentTimeMillis();
 
 		// load the images for the droplet and the bucket, 64x64 pixels each
 		dropImage = new Texture(Gdx.files.internal("apple.png"));
 		bucketImage = new Texture(Gdx.files.internal("baby.png"));
 		backgroundImage = new Texture(Gdx.files.internal("MainScreen.png"));
 
-
-		// create the camera and the SpriteBatch
-		camera = new OrthographicCamera();
-		camera.setToOrtho(false, 800, 600);
-
-		startTime = System.currentTimeMillis();
-
 		// create a Rectangle to logically represent the bucket
 		bucket = new Rectangle();
-		bucket.x = 800 / 2 - 64 / 2; // center the bucket horizontally
-		bucket.y = 20; // bottom left corner of the bucket is 20 pixels above
-						// the bottom screen edge
+		bucket.x = 800 / 2 - 64 / 2;
+		bucket.y = 20;
 		bucket.width = 64;
 		bucket.height = 64;
 
@@ -72,31 +67,19 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void render(float delta) {
-		curTime = System.currentTimeMillis();
-		remainingTime = (time - (curTime - startTime)) / 1000;
-		System.out.println((curTime - startTime) / 1000);
+		remainingTime = (time - (System.currentTimeMillis() - startTime)) / 1000;
 
 		if (remainingTime <= 0){
 			giveRewards();
 		}
-		// clear the screen with a dark blue color. The
-		// arguments to glClearColor are the red, green
-		// blue and alpha component in the range [0,1]
-		// of the color to be used to clear the screen.
-		Gdx.gl.glClearColor(0, 155/255f, 0, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		// tell the camera to update its matrices.
 		camera.update();
 
-		// tell the SpriteBatch to render in the
-		// coordinate system specified by the camera.
-		game.batch.setProjectionMatrix(camera.combined);
-
 		// begin a new batch and draw the bucket and
 		// all drops
 		game.batch.begin();
-		game.batch.draw(backgroundImage, 0, 0, 800, 600);
+		game.batch.draw(backgroundImage, 0, 0, LittleMonster.V_WIDTH, LittleMonster.V_HEIGHT);
 		game.font.draw(game.batch, "Drops Collected: " + dropsGathered, 0, 480);
 		game.batch.draw(bucketImage, bucket.x, bucket.y, bucket.width, bucket.height);
 		for (Rectangle raindrop : raindrops) {
@@ -107,15 +90,12 @@ public class GameScreen implements Screen {
 
 		// process user input
 		if (Gdx.input.isTouched()) {
-			Vector3 touchPos = new Vector3();
-			touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
-			camera.unproject(touchPos);
-			bucket.x = touchPos.x - 64 / 2;
+			bucket.x = Gdx.input.getX() - 64 / 2;
 		}
 		if (Gdx.input.isKeyPressed(Keys.LEFT))
-			bucket.x -= 200 * Gdx.graphics.getDeltaTime();
+			bucket.x -= 250 * Gdx.graphics.getDeltaTime();
 		if (Gdx.input.isKeyPressed(Keys.RIGHT))
-			bucket.x += 200 * Gdx.graphics.getDeltaTime();
+			bucket.x += 250 * Gdx.graphics.getDeltaTime();
 
 		// make sure the bucket stays within the screen bounds
 		if (bucket.x < 0)
@@ -166,6 +146,9 @@ public class GameScreen implements Screen {
 			game.pet.giveHappiness(5);
 			game.pet.giveWeight(-5);
 		}
+
+		if (game.pet.getWeight() < 5)
+			game.pet.setWeight(5);
 
 	}
 

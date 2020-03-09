@@ -10,13 +10,13 @@ import java.util.Arrays;
 
 public class Pet {
 
-    String name;
-    int energy = 5;
-    int hunger = 5;
-    int happiness = 5;
-    int hygiene = 5;
-    int age = 0;
-    int weight = 0;
+    private String name;
+    private int energy = 5;
+    private int hunger = 5;
+    private int happiness = 5;
+    private int hygiene = 5;
+    private int age = 0;
+    private int weight = 0;
 
     public int getWeight() {
         return weight;
