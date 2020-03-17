@@ -14,13 +14,21 @@ public class FoodStage extends MenuButtonsScreen {
 
     TextButton breadButton, chickenButton, candyButton, chocoButton;
 
-    public FoodStage(final LittleMonster game, final MainScreen mainScreen){
+    public FoodStage(final LittleMonster game, final MainScreen mainScreen) {
         super(game, mainScreen);
+
+        // Add listener to feed button to change stage to FoodStage
+        feedButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                mainScreen.changeStage(StageType.MainStage);
+            }
+        });
 
         // BUTTONS FOR MAIN STAGE
 
-        breadButton = new TextButton("Bread", game.skin);
-        breadButton.setPosition((int)((LittleMonster.V_WIDTH / 2) - breadButton.getWidth() / 2), (int)((LittleMonster.V_HEIGHT * 3 / 4) - breadButton.getHeight() / 2));
+        breadButton = new TextButton("Bread", game.textButtonStyle);
+        breadButton.setPosition((int) ((LittleMonster.V_WIDTH / 2) - breadButton.getWidth() / 2), (int) ((LittleMonster.V_HEIGHT * 3 / 4) - breadButton.getHeight() / 2));
         breadButton.setVisible(true);
         breadButton.addListener(new ChangeListener() {
             @Override
@@ -30,9 +38,9 @@ public class FoodStage extends MenuButtonsScreen {
         });
 
         // Button for feeding
-        chickenButton = new TextButton("Feed Pet", game.skin);
+        chickenButton = new TextButton("Feed Pet", game.textButtonStyle);
 
-        chickenButton.setPosition((int)((LittleMonster.V_WIDTH / 2) - chickenButton.getWidth() / 2), (int)((LittleMonster.V_HEIGHT * 2 / 8) - chickenButton.getHeight() / 2));
+        chickenButton.setPosition((int) ((LittleMonster.V_WIDTH / 2) - chickenButton.getWidth() / 2), (int) ((LittleMonster.V_HEIGHT * 2 / 8) - chickenButton.getHeight() / 2));
         chickenButton.setVisible(true);
         chickenButton.addListener(new ChangeListener() {
             @Override
@@ -42,9 +50,9 @@ public class FoodStage extends MenuButtonsScreen {
         });
 
         // Button for feeding
-        candyButton = new TextButton("Flush Toilet", game.skin);
+        candyButton = new TextButton("Flush Toilet", game.textButtonStyle);
 
-        candyButton.setPosition((int)((LittleMonster.V_WIDTH / 2) - candyButton.getWidth() / 2), (int)((LittleMonster.V_HEIGHT * 3 / 8) - candyButton.getHeight() / 2));
+        candyButton.setPosition((int) ((LittleMonster.V_WIDTH / 2) - candyButton.getWidth() / 2), (int) ((LittleMonster.V_HEIGHT * 3 / 8) - candyButton.getHeight() / 2));
         candyButton.setVisible(true);
         candyButton.addListener(new ChangeListener() {
             @Override
@@ -55,9 +63,9 @@ public class FoodStage extends MenuButtonsScreen {
         });
 
         // Button for feeding
-        chocoButton = new TextButton("Sleep", game.skin);
+        chocoButton = new TextButton("Sleep", game.textButtonStyle);
 
-        chocoButton.setPosition((int)((LittleMonster.V_WIDTH / 2) - chocoButton.getWidth() / 2), (int)((LittleMonster.V_HEIGHT * 4 / 8) - chocoButton.getHeight() / 2));
+        chocoButton.setPosition((int) ((LittleMonster.V_WIDTH / 2) - chocoButton.getWidth() / 2), (int) ((LittleMonster.V_HEIGHT * 4 / 8) - chocoButton.getHeight() / 2));
         chocoButton.setVisible(true);
         chocoButton.addListener(new ChangeListener() {
             @Override

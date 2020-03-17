@@ -17,6 +17,11 @@ public class Pet {
     private int hygiene = 5;
     private int age = 0;
     private int weight = 0;
+    private PetSprite sprite;
+
+    public Pet() {
+        setSprite();
+    }
 
     public int getWeight() {
         return weight;
@@ -74,13 +79,13 @@ public class Pet {
         this.age = age;
     }
 
-    public boolean giveFood(FoodType food){
+    public boolean giveFood(FoodType food) {
 
-        if (hunger >= 10){
+        if (hunger >= 10) {
             return false;
         }
 
-        switch(food){
+        switch (food) {
             case Bread:
                 energy += 2;
                 weight += 1;
@@ -122,17 +127,36 @@ public class Pet {
                 break;
         }
 
-        if (hunger > 10){
+        if (hunger > 10) {
             hunger = 10;
         }
         return true;
     }
 
-    public void giveHappiness(int amount){
+    public void setSprite() {
+        if (age <= 0) sprite = PetSprite.Baby;
+        else if (age <= 5) sprite = PetSprite.Kid;
+        else if (age <= 10) sprite = PetSprite.Teenager;
+        else sprite = PetSprite.Teenager;
+    }
+
+    public String getSprite() {
+        switch (sprite) {
+            case Baby:
+                return "baby.png";
+            case Kid:
+                return "kid.png";
+            case Teenager:
+                return "teenager.png";
+        }
+        return "";
+    }
+
+    public void giveHappiness(int amount) {
         happiness += amount;
     }
 
-    public void giveWeight(int amount){
+    public void giveWeight(int amount) {
         weight += amount;
     }
 
@@ -140,17 +164,18 @@ public class Pet {
         String encrypted = new String(Files.readAllBytes(Paths.get("pet.data")));
         String[] data = encrypted.split("#");
         System.out.println(Arrays.toString(data));
-        setName(data[0]);
-        setAge(Integer.parseInt(data[1]));
-        setEnergy(Integer.parseInt(data[2]));
-        setHappiness(Integer.parseInt(data[3]));
-        setHunger(Integer.parseInt(data[4]));
-        setHygiene(Integer.parseInt(data[5]));
-        setWeight(Integer.parseInt(data[6]));
+        name = data[0];
+        age = Integer.parseInt(data[1]);
+        energy = Integer.parseInt(data[2]);
+        happiness = Integer.parseInt(data[3]);
+        hunger = Integer.parseInt(data[4]);
+        hygiene = Integer.parseInt(data[5]);
+        weight = Integer.parseInt(data[6]);
+        setSprite();
     }
 
-    public void savePet(){
-        try{
+    public void savePet() {
+        try {
             File file = new File("pet.data");
             file.createNewFile();
         } catch (IOException e) {
@@ -158,9 +183,9 @@ public class Pet {
             e.printStackTrace();
         }
 
-        String data = "" + getName() + "#" + getAge() + "#" + getEnergy() + "#" + getHappiness() + "#" + getHunger() + "#" + getHygiene() + "#" + getWeight();
+        String data = "" + name + "#" + age + "#" + energy + "#" + happiness + "#" + hunger + "#" + hygiene + "#" + weight;
 
-        try{
+        try {
             Path path = Paths.get("pet.data");
             BufferedWriter writer = Files.newBufferedWriter(path);
             writer.write(data);
@@ -169,6 +194,14 @@ public class Pet {
             e.printStackTrace();
         }
 
+    }
+
+    public void updateStats(int time) {
+        age += time;
+        hunger -= time;
+        happiness -= time;
+        if (age % 10 == 0) hygiene -= 3 * time;
+        setSprite();
     }
 
 }

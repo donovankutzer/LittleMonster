@@ -19,11 +19,11 @@ public class MainStage extends MenuButtonsScreen {
     Texture petSprite;
     Image petActor;
 
-    public MainStage(final LittleMonster game, final MainScreen mainScreen){
+    public MainStage(final LittleMonster game, final MainScreen mainScreen) {
         super(game, mainScreen);
 
         // Draw pet
-        petSprite = new Texture(Gdx.files.internal("baby.png"));
+        petSprite = new Texture(Gdx.files.internal(game.pet.getSprite()));
         petActor = new Image(petSprite);
         petActor.setPosition(320, 180);
         // Creates moving animation
