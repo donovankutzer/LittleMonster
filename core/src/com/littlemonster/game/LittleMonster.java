@@ -2,9 +2,7 @@ package com.littlemonster.game;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -22,7 +20,6 @@ public class LittleMonster extends Game {
 	public BitmapFont font;
 	public Pet pet;
 	public Skin skin;
-	public Pixmap pixmap;
 	public TextButton.TextButtonStyle textButtonStyle;
 	public long startTime, currentTime, elapsedTime;
 	TextureAtlas buttonAtlas;

@@ -3,12 +3,10 @@ package com.littlemonster.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
 
@@ -28,7 +26,7 @@ public class GameScreen implements Screen {
     Array<Rectangle> raindrops;
     long lastDropTime;
     int dropsGathered;
-    long startTime, curTime, remainingTime;
+    long startTime, remainingTime;
 
 
     public GameScreen(final LittleMonster game) {
@@ -81,9 +79,8 @@ public class GameScreen implements Screen {
         game.batch.draw(backgroundImage, 0, 0, LittleMonster.V_WIDTH, LittleMonster.V_HEIGHT);
         game.font.draw(game.batch, "Drops Collected: " + dropsGathered, 0, 480);
         game.batch.draw(bucketImage, bucket.x, bucket.y, bucket.width, bucket.height);
-        for (Rectangle raindrop : raindrops) {
+        for (Rectangle raindrop : raindrops)
             game.batch.draw(dropImage, raindrop.x, raindrop.y, raindrop.width, raindrop.height);
-        }
         game.font.draw(game.batch, Long.toString(remainingTime), 300, 480);
         game.batch.end();
 

@@ -31,10 +31,6 @@ public class Pet {
         this.weight = weight;
     }
 
-    public String getName() {
-        return name;
-    }
-
     public int getEnergy() {
         return energy;
     }
