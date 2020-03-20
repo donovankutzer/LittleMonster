@@ -22,17 +22,31 @@ public class MenuButtonsScreen extends Stage {
     public MenuButtonsScreen(LittleMonster game, MainScreen mainScreen) {
         this.game = game;
         this.mainScreen = mainScreen;
-
-        // Set background image
-        bgImage = new Texture(Gdx.files.internal("MainScreen.png"));
-        background = new Image(bgImage);
-        background.setPosition(0, 0);
-        addActor(background);
-        drawMenuButtons();
-
     }
 
 
+    public void drawScreen(StageType stage){
+        setBg(stage);
+        drawMenuButtons();
+    }
+
+
+    public void setBg(StageType stage){
+        switch(stage){
+            case MainStage:
+                bgImage = new Texture(Gdx.files.internal("MainScreen.png"));
+                break;
+            case FoodStage:
+            case GameStage:
+                bgImage = new Texture(Gdx.files.internal("MenuStage.png"));
+                break;
+            case SleepStage:
+                bgImage = new Texture(Gdx.files.internal("SleepStage.png"));
+        }
+        background = new Image(bgImage);
+        background.setPosition(0, 0);
+        addActor(background);
+    }
 
     public void drawMenuButtons() {
 
@@ -43,7 +57,7 @@ public class MenuButtonsScreen extends Stage {
         gameButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                game.setScreen(new GameScreen(game));
+                mainScreen.changeStage(StageType.GameStage);
             }
         });
 
@@ -69,8 +83,7 @@ public class MenuButtonsScreen extends Stage {
         sleepButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                game.pet.setEnergy(10);
-                System.out.println("Pet fully rested");
+                mainScreen.changeStage(StageType.SleepStage);
             }
         });
 

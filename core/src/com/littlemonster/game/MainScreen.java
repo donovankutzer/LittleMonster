@@ -9,33 +9,34 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 
 
 enum StageType {
-    FoodStage, MainStage, GameStage
+    FoodStage, MainStage, GameStage, SleepStage
 }
 
 public class MainScreen implements Screen {
 
     final LittleMonster game;
 
-    Stage stage;
-    MainStage mainStage;
-    FoodStage foodStage;
-
-    //TODO Change to proper stages. This is just to allow game to run
-    MainStage gameStage;
-    ShapeRenderer petStats;
+    private Stage stage;
+    private MainStage mainStage;
+    private FoodStage foodStage;
+    private GameStage gameStage;
+    private SleepStage sleepStage;
+    private ShapeRenderer petStats;
 
 
     public MainScreen(final LittleMonster game) {
         // Loads game and camera from main LittleMonster class
         this.game = game;
 
-
+        // Creates all stages
         mainStage = new MainStage(game, this);
         foodStage = new FoodStage(game, this);
+        gameStage = new GameStage(game, this);
+        sleepStage = new SleepStage(game, this);
+
+        petStats = new ShapeRenderer();
+
         stage = mainStage;
-
-        this.petStats = new ShapeRenderer();
-
 
         // Allows user input for stage items
         Gdx.input.setInputProcessor(stage);
@@ -52,17 +53,22 @@ public class MainScreen implements Screen {
             case GameStage:
                 this.stage = gameStage;
                 break;
+            case SleepStage:
+                this.stage = sleepStage;
+                break;
         }
         Gdx.input.setInputProcessor(this.stage);
     }
 
+
     public void checkTime() {
         game.currentTime = System.currentTimeMillis();
         game.elapsedTime = game.currentTime - game.startTime;
+        // If 1 minute has passed
         if (game.elapsedTime / 1000 > 60) {
             game.pet.updateStats((int) (game.elapsedTime / 1000 / 60));
+            // Resets elapsed time to 0
             game.startTime = game.currentTime;
-            System.out.println("Time updated by a minute");
         }
     }
 
@@ -73,6 +79,13 @@ public class MainScreen implements Screen {
         stage.act();
         stage.draw();
 
+        // Displays text above pet stats
+        game.batch.begin();
+        game.font.draw(game.batch, "Hunger", 40, 550);
+        game.font.draw(game.batch, "Energy", 240, 550);
+        game.font.draw(game.batch, "Happiness", 440, 550);
+        game.font.draw(game.batch, "Hygiene", 640, 550);
+        game.batch.end();
 
         // Display pet stat bars
         petStats.begin(ShapeRenderer.ShapeType.Filled);

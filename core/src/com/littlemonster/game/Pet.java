@@ -19,10 +19,6 @@ public class Pet {
     private int weight = 0;
     private PetSprite sprite;
 
-    public Pet() {
-        setSprite();
-    }
-
     public int getWeight() {
         return weight;
     }
@@ -126,6 +122,7 @@ public class Pet {
         if (hunger > 10) {
             hunger = 10;
         }
+        if (energy > 10) energy = 10;
         return true;
     }
 
@@ -149,7 +146,7 @@ public class Pet {
     }
 
     public void giveHappiness(int amount) {
-        happiness += amount;
+        happiness = Math.min(10, happiness + amount);
     }
 
     public void giveWeight(int amount) {
@@ -179,7 +176,7 @@ public class Pet {
             e.printStackTrace();
         }
 
-        String data = "" + name + "#" + age + "#" + energy + "#" + happiness + "#" + hunger + "#" + hygiene + "#" + weight;
+        String data = name + "#" + age + "#" + energy + "#" + happiness + "#" + hunger + "#" + hygiene + "#" + weight;
 
         try {
             Path path = Paths.get("pet.data");
@@ -194,9 +191,9 @@ public class Pet {
 
     public void updateStats(int time) {
         age += time;
-        hunger -= time;
-        happiness -= time;
-        if (age % 10 == 0) hygiene -= 3 * time;
+        hunger = Math.max(0, hunger - time);
+        happiness = Math.max(0, happiness-time);
+        if (age % 10 == 0) hygiene = (Math.max(0, hygiene - 3 * time));
         setSprite();
     }
 

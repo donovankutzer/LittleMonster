@@ -7,7 +7,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
-import static com.badlogic.gdx.scenes.scene2d.actions.Actions.delay;
 
 // Extends MenuButtonsScreen to save from having to draw the same button for multiple stages
 public class MainStage extends MenuButtonsScreen {
@@ -16,6 +15,7 @@ public class MainStage extends MenuButtonsScreen {
 
     public MainStage(final LittleMonster game, final MainScreen mainScreen) {
         super(game, mainScreen);
+        drawScreen(StageType.MainStage);
 
         // Draw pet
         petSprite = new Texture(Gdx.files.internal(game.pet.getSprite()));

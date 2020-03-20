@@ -16,6 +16,7 @@ public class FoodStage extends MenuButtonsScreen {
 
     public FoodStage(final LittleMonster game, final MainScreen mainScreen) {
         super(game, mainScreen);
+        drawScreen(StageType.FoodStage);
 
         // Add listener to feed button to change stage to FoodStage
         feedButton.addListener(new ChangeListener() {
@@ -27,13 +28,13 @@ public class FoodStage extends MenuButtonsScreen {
 
         // BUTTONS FOR MAIN STAGE
 
-        breadButton = new TextButton("Bread", game.textButtonStyle);
+        breadButton = new TextButton("Bread", game.transTextButtonStyle);
         breadButton.setPosition((int) ((LittleMonster.V_WIDTH / 2) - breadButton.getWidth() / 2), (int) ((LittleMonster.V_HEIGHT * 3 / 4) - breadButton.getHeight() / 2));
         breadButton.setVisible(true);
         breadButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                game.setScreen(new GameScreen(game));
+                game.pet.giveFood(FoodType.Bread);
             }
         });
 

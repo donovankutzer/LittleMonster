@@ -23,9 +23,9 @@ public class GameScreen implements Screen {
 
     OrthographicCamera camera;
     Rectangle bucket;
-    Array<Rectangle> raindrops;
+    Array<Rectangle> apples;
     long lastDropTime;
-    int dropsGathered;
+    int applesGathered;
     long startTime, remainingTime;
 
 
@@ -34,6 +34,7 @@ public class GameScreen implements Screen {
         camera = game.camera;
 
         startTime = System.currentTimeMillis();
+        Gdx.input.setInputProcessor(null);
 
         // load the images for the droplet and the bucket, 64x64 pixels each
         dropImage = new Texture(Gdx.files.internal("apple.png"));
@@ -48,17 +49,17 @@ public class GameScreen implements Screen {
         bucket.height = 64;
 
         // create the raindrops array and spawn the first raindrop
-        raindrops = new Array<>();
-        spawnRaindrop();
+        apples = new Array<>();
+        spawnApple();
     }
 
-    private void spawnRaindrop() {
-        Rectangle raindrop = new Rectangle();
-        raindrop.x = MathUtils.random(0, 800 - 64);
-        raindrop.y = 480;
-        raindrop.width = 64;
-        raindrop.height = 64;
-        raindrops.add(raindrop);
+    private void spawnApple() {
+        Rectangle apple = new Rectangle();
+        apple.x = MathUtils.random(0, 800 - 64);
+        apple.y = 480;
+        apple.width = 64;
+        apple.height = 64;
+        apples.add(apple);
         lastDropTime = TimeUtils.nanoTime();
     }
 
@@ -77,10 +78,10 @@ public class GameScreen implements Screen {
         // all drops
         game.batch.begin();
         game.batch.draw(backgroundImage, 0, 0, LittleMonster.V_WIDTH, LittleMonster.V_HEIGHT);
-        game.font.draw(game.batch, "Drops Collected: " + dropsGathered, 0, 480);
+        game.font.draw(game.batch, "Drops Collected: " + applesGathered, 0, 480);
         game.batch.draw(bucketImage, bucket.x, bucket.y, bucket.width, bucket.height);
-        for (Rectangle raindrop : raindrops)
-            game.batch.draw(dropImage, raindrop.x, raindrop.y, raindrop.width, raindrop.height);
+        for (Rectangle apple : apples)
+            game.batch.draw(dropImage, apple.x, apple.y, apple.width, apple.height);
         game.font.draw(game.batch, Long.toString(remainingTime), 300, 480);
         game.batch.end();
 
@@ -101,37 +102,37 @@ public class GameScreen implements Screen {
 
         // check if we need to create a new raindrop
         if (TimeUtils.nanoTime() - lastDropTime > 1000000000)
-            spawnRaindrop();
+            spawnApple();
 
         // move the raindrops, remove any that are beneath the bottom edge of
         // the screen or that hit the bucket. In the later case we increase the
         // value our drops counter and add a sound effect.
-        Iterator<Rectangle> iter = raindrops.iterator();
+        Iterator<Rectangle> iter = apples.iterator();
         while (iter.hasNext()) {
-            Rectangle raindrop = iter.next();
-            raindrop.y -= 200 * Gdx.graphics.getDeltaTime();
-            if (raindrop.y + 64 < 0)
+            Rectangle apple = iter.next();
+            apple.y -= 200 * Gdx.graphics.getDeltaTime();
+            if (apple.y + 64 < 0)
                 iter.remove();
-            if (raindrop.overlaps(bucket)) {
-                dropsGathered++;
+            if (apple.overlaps(bucket)) {
+                applesGathered++;
                 iter.remove();
             }
         }
     }
 
     public void giveRewards() {
-        System.out.println(dropsGathered);
+        System.out.println(applesGathered);
         game.setScreen(new MainScreen(game));
-        if (dropsGathered < 10) {
+        if (applesGathered < 10) {
             game.pet.giveHappiness(1);
             game.pet.giveWeight(-1);
-        } else if (dropsGathered < 20) {
+        } else if (applesGathered < 20) {
             game.pet.giveHappiness(2);
             game.pet.giveWeight(-2);
-        } else if (dropsGathered < 30) {
+        } else if (applesGathered < 30) {
             game.pet.giveHappiness(3);
             game.pet.giveWeight(-3);
-        } else if (dropsGathered < 40) {
+        } else if (applesGathered < 40) {
             game.pet.giveHappiness(4);
             game.pet.giveWeight(-4);
         } else {

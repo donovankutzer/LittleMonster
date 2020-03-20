@@ -2,7 +2,9 @@ package com.littlemonster.game;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -20,7 +22,8 @@ public class LittleMonster extends Game {
 	public BitmapFont font;
 	public Pet pet;
 	public Skin skin;
-	public TextButton.TextButtonStyle textButtonStyle;
+	public Pixmap pixmap;
+	public TextButton.TextButtonStyle textButtonStyle, transTextButtonStyle;
 	public long startTime, currentTime, elapsedTime;
 	TextureAtlas buttonAtlas;
 
@@ -38,19 +41,20 @@ public class LittleMonster extends Game {
 		font.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
 		font.getData().setScale(0.80f);
 
-//		skin = new Skin();
-//		pixmap = new Pixmap(1,  1, Pixmap.Format.RGBA8888);
-//		pixmap.setColor(Color.BLACK);
-//		pixmap.fill();
-//		skin.add("clear", new Texture(pixmap));
-//		skin.add("default", font);
-//
-//		textButtonStyle = new TextButton.TextButtonStyle();
-//		textButtonStyle.up = skin.newDrawable("clear", new Color(0, 0, 0, 1f));
-//		textButtonStyle.font = skin.getFont("default");
-//		skin.add("default", textButtonStyle);
-
 		skin = new Skin();
+
+		pixmap = new Pixmap(1,  1, Pixmap.Format.RGBA8888);
+		pixmap.setColor(Color.BLACK);
+		pixmap.fill();
+		skin.add("clear", new Texture(pixmap));
+		skin.add("default", font);
+
+		transTextButtonStyle = new TextButton.TextButtonStyle();
+		transTextButtonStyle.up = skin.newDrawable("clear", new Color(0, 0, 0, 0f));
+		transTextButtonStyle.font = skin.getFont("default");
+		skin.add("default", transTextButtonStyle);
+
+
 		buttonAtlas = new TextureAtlas(Gdx.files.internal("skin/neon-ui.atlas"));
 		skin.addRegions(buttonAtlas);
 		textButtonStyle = new TextButton.TextButtonStyle();
