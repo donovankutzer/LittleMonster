@@ -36,7 +36,7 @@ public class GameScreen implements Screen {
         startTime = System.currentTimeMillis();
         Gdx.input.setInputProcessor(null);
 
-        // load the images for the droplet and the bucket, 64x64 pixels each
+        // Load image files
         dropImage = new Texture(Gdx.files.internal("apple.png"));
         bucketImage = new Texture(Gdx.files.internal("baby.png"));
         backgroundImage = new Texture(Gdx.files.internal("MainScreen.png"));
@@ -48,7 +48,7 @@ public class GameScreen implements Screen {
         bucket.width = 64;
         bucket.height = 64;
 
-        // create the raindrops array and spawn the first raindrop
+        // create array of apples and spawns one
         apples = new Array<>();
         spawnApple();
     }
@@ -72,7 +72,7 @@ public class GameScreen implements Screen {
         }
 
         // tell the camera to update its matrices.
-        camera.update();
+        //camera.update();
 
         // begin a new batch and draw the bucket and
         // all drops

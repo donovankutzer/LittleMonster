@@ -1,15 +1,12 @@
 package com.littlemonster.game;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 
 public class MenuButtonsScreen extends Stage {
     LittleMonster game;
@@ -68,21 +65,26 @@ public class MenuButtonsScreen extends Stage {
 
         // Button for feeding
         flushButton = new TextButton("Flush Toilet", game.textButtonStyle);
-        flushButton.setPosition((LittleMonster.V_WIDTH * 7 / 8) - flushButton.getWidth() / 2, 30);
+        flushButton.setPosition((int)((LittleMonster.V_WIDTH * 7 / 8) - flushButton.getWidth() / 2), 30);
         flushButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                // Only flushes if pet is not sleeping
+                if (game.pet.isSleeping()) return;
+                mainScreen.changeStage(StageType.FlushStage);
                 System.out.println("Flushed!");
                 game.pet.setHygiene(10);
+                game.pet.setPoos(0);
             }
         });
 
         // Button for feeding
         sleepButton = new TextButton("Sleep", game.textButtonStyle);
-        sleepButton.setPosition((LittleMonster.V_WIDTH * 1 / 8) - sleepButton.getWidth() / 2, 30);
+        sleepButton.setPosition((int)((LittleMonster.V_WIDTH / 8) - sleepButton.getWidth() / 2), 30);
         sleepButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                game.pet.setSleeping(true);
                 mainScreen.changeStage(StageType.SleepStage);
             }
         });

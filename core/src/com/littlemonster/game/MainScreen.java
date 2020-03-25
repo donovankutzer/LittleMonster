@@ -9,7 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 
 
 enum StageType {
-    FoodStage, MainStage, GameStage, SleepStage
+    FoodStage, MainStage, GameStage, SleepStage, FlushStage
 }
 
 public class MainScreen implements Screen {
@@ -21,6 +21,7 @@ public class MainScreen implements Screen {
     private FoodStage foodStage;
     private GameStage gameStage;
     private SleepStage sleepStage;
+    private FlushStage flushStage;
     private ShapeRenderer petStats;
 
 
@@ -33,6 +34,7 @@ public class MainScreen implements Screen {
         foodStage = new FoodStage(game, this);
         gameStage = new GameStage(game, this);
         sleepStage = new SleepStage(game, this);
+        flushStage = new FlushStage(game, this);
 
         petStats = new ShapeRenderer();
 
@@ -56,6 +58,11 @@ public class MainScreen implements Screen {
             case SleepStage:
                 this.stage = sleepStage;
                 break;
+            case FlushStage:
+                this.stage = flushStage;
+                flushStage.flush();
+                break;
+
         }
         Gdx.input.setInputProcessor(this.stage);
     }
@@ -76,7 +83,8 @@ public class MainScreen implements Screen {
     public void render(float delta) {
 
         // Draws Stage and acts if needed
-        stage.act();
+        stage.act(Gdx.graphics.getDeltaTime());
+        mainStage.update();
         stage.draw();
 
         // Displays text above pet stats
@@ -130,13 +138,11 @@ public class MainScreen implements Screen {
 
     @Override
     public void resume() {
-        // TODO Auto-generated method stub
 
     }
 
     @Override
     public void hide() {
-        // TODO Auto-generated method stub
 
     }
 
@@ -145,6 +151,7 @@ public class MainScreen implements Screen {
         mainStage.dispose();
         foodStage.dispose();
         gameStage.dispose();
+        sleepStage.dispose();
     }
 
 }
