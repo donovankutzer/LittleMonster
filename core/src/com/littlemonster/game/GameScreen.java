@@ -71,9 +71,6 @@ public class GameScreen implements Screen {
             giveRewards();
         }
 
-        // tell the camera to update its matrices.
-        //camera.update();
-
         // begin a new batch and draw the bucket and
         // all drops
         game.batch.begin();

@@ -5,5 +5,6 @@ public enum PetSprite {
     Kid,
     Teenager,
     Adult,
-    Old
+    Old,
+    Dead
 }

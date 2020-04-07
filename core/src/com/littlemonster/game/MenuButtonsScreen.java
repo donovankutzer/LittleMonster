@@ -14,7 +14,7 @@ public class MenuButtonsScreen extends Stage {
 
     Texture bgImage;
     Image background;
-    TextButton gameButton, feedButton, flushButton, sleepButton;
+    TextButton gameButton, feedButton, flushButton, sleepButton, statsButton;
 
     public MenuButtonsScreen(LittleMonster game, MainScreen mainScreen) {
         this.game = game;
@@ -47,52 +47,77 @@ public class MenuButtonsScreen extends Stage {
 
     public void drawMenuButtons() {
 
+        // Button for feeding
+        sleepButton = new TextButton("Sleep", game.textButtonStyle);
+        sleepButton.setPosition((int)((LittleMonster.V_WIDTH * .8/ 16)), 30);
+        sleepButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                if (game.pet.isAlive()) {
+                    game.pet.setSleeping(true);
+                    mainScreen.changeStage(StageType.SleepStage);
+                }
+            }
+        });
+
         // BUTTONS FOR MAIN STAGE
 
         gameButton = new TextButton("Play Game", game.textButtonStyle);
-        gameButton.setPosition((int) ((LittleMonster.V_WIDTH * 3 / 8) - gameButton.getWidth() / 2), 30);
+        gameButton.setPosition((int) ((LittleMonster.V_WIDTH * 3.2 / 16)), 30);
         gameButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                mainScreen.changeStage(StageType.GameStage);
+                if (game.pet.isAlive() && !game.pet.isSleeping())
+                    mainScreen.changeStage(StageType.GameStage);
             }
         });
 
         // Button for feeding
         feedButton = new TextButton("Feed Pet", game.textButtonStyle);
-        feedButton.setPosition((int) ((LittleMonster.V_WIDTH * 5 / 8) - feedButton.getWidth() / 2), 30);
+        feedButton.setPosition((int) ((LittleMonster.V_WIDTH * 6.5 / 16)), 30);
+        feedButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                if (game.pet.isAlive() && !game.pet.isSleeping())
+                    mainScreen.changeStage(StageType.FoodStage);
+            }
+        });
 
 
         // Button for feeding
         flushButton = new TextButton("Flush Toilet", game.textButtonStyle);
-        flushButton.setPosition((int)((LittleMonster.V_WIDTH * 7 / 8) - flushButton.getWidth() / 2), 30);
+        flushButton.setPosition((int)((LittleMonster.V_WIDTH * 9.8 / 16)), 30);
         flushButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 // Only flushes if pet is not sleeping
-                if (game.pet.isSleeping()) return;
-                mainScreen.changeStage(StageType.FlushStage);
-                System.out.println("Flushed!");
-                game.pet.setHygiene(10);
-                game.pet.setPoos(0);
+                if (game.pet.isAlive() && !game.pet.isSleeping()) {
+                    mainScreen.changeStage(StageType.FlushStage);
+                    System.out.println("Flushed!");
+                    game.pet.setHygiene(10);
+                    game.pet.setPoos(0);
+                    mainScreen.updateStages();
+                }
             }
         });
 
         // Button for feeding
-        sleepButton = new TextButton("Sleep", game.textButtonStyle);
-        sleepButton.setPosition((int)((LittleMonster.V_WIDTH / 8) - sleepButton.getWidth() / 2), 30);
-        sleepButton.addListener(new ChangeListener() {
+        statsButton = new TextButton("Stats", game.textButtonStyle);
+        statsButton.setPosition((int)((LittleMonster.V_WIDTH * 13.5 / 16)), 30);
+        statsButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                game.pet.setSleeping(true);
-                mainScreen.changeStage(StageType.SleepStage);
+                mainScreen.changeStage(StageType.StatsStage);
             }
         });
+
+
 
         addActor(gameButton);
         addActor(feedButton);
         addActor(flushButton);
         addActor(sleepButton);
+        addActor(statsButton);
 
     }
 }

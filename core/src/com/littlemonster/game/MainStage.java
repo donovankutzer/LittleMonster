@@ -2,9 +2,12 @@ package com.littlemonster.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
@@ -49,18 +52,17 @@ public class MainStage extends MenuButtonsScreen {
         // Creates moving animation
         petActor.addAction(forever(sequence(moveBy(0, 20), delay(0.69f), moveBy(0, -20), delay(0.69f))));
         addActor(petActor);
-
-        // Add listener to feed button to change stage to FoodStage
-        feedButton.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                mainScreen.changeStage(StageType.FoodStage);
-            }
-        });
-
     }
 
     public void update(){
+        petActor.remove();
+        petSprite = new Texture(Gdx.files.internal(game.pet.getSprite()));
+        petActor = new Image(petSprite);
+        petActor.setPosition(400, 180, Align.bottomRight);
+        petActor.addAction(forever(sequence(moveBy(0, 20), delay(0.69f), moveBy(0, -20), delay(0.69f))));
+        addActor(petActor);
+
+
         switch (game.pet.getPoos()){
             case 4: poo4.setVisible(true);
             case 3: poo3.setVisible(true);

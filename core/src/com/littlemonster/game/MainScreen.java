@@ -3,13 +3,13 @@ package com.littlemonster.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.*;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
 
 enum StageType {
-    FoodStage, MainStage, GameStage, SleepStage, FlushStage
+    FoodStage, MainStage, GameStage, SleepStage, FlushStage, StatsStage, DeathStage
 }
 
 public class MainScreen implements Screen {
@@ -22,6 +22,8 @@ public class MainScreen implements Screen {
     private GameStage gameStage;
     private SleepStage sleepStage;
     private FlushStage flushStage;
+    private DeathStage deathStage;
+    private StatsStage statsStage;
     private ShapeRenderer petStats;
 
 
@@ -35,16 +37,20 @@ public class MainScreen implements Screen {
         gameStage = new GameStage(game, this);
         sleepStage = new SleepStage(game, this);
         flushStage = new FlushStage(game, this);
+        deathStage = new DeathStage(game, this);
+        statsStage = new StatsStage(game, this);
 
         petStats = new ShapeRenderer();
 
         stage = mainStage;
+        updateStages();
 
         // Allows user input for stage items
         Gdx.input.setInputProcessor(stage);
     }
 
     public void changeStage(StageType stage) {
+        updateStages();
         switch (stage) {
             case MainStage:
                 this.stage = mainStage;
@@ -62,7 +68,12 @@ public class MainScreen implements Screen {
                 this.stage = flushStage;
                 flushStage.flush();
                 break;
-
+            case StatsStage:
+                this.stage = statsStage;
+                break;
+            case DeathStage:
+                this.stage = deathStage;
+                break;
         }
         Gdx.input.setInputProcessor(this.stage);
     }
@@ -76,7 +87,19 @@ public class MainScreen implements Screen {
             game.pet.updateStats((int) (game.elapsedTime / 1000 / 60));
             // Resets elapsed time to 0
             game.startTime = game.currentTime;
+
+            updateStages();
+
+            // Forces stage change if dead
+            if (stage != deathStage && !game.pet.isAlive()) {
+                System.out.println("Changing stage");
+                changeStage(StageType.DeathStage);
+            }
         }
+    }
+
+    public void updateStages(){
+        mainStage.update();
     }
 
     @Override
@@ -84,7 +107,7 @@ public class MainScreen implements Screen {
 
         // Draws Stage and acts if needed
         stage.act(Gdx.graphics.getDeltaTime());
-        mainStage.update();
+        checkTime();
         stage.draw();
 
         // Displays text above pet stats
@@ -114,7 +137,6 @@ public class MainScreen implements Screen {
 
         if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) game.close();
 
-        checkTime();
     }
 
 

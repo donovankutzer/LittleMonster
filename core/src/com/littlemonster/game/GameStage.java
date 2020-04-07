@@ -20,14 +20,6 @@ public class GameStage extends MenuButtonsScreen {
             }
         });
 
-        // Add listener to feed button to change stage to FoodStage
-        feedButton.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                mainScreen.changeStage(StageType.FoodStage);
-            }
-        });
-
         // BUTTONS FOR MAIN STAGE
         appleGameButton = new TextButton("Apple Catch", game.transTextButtonStyle);
         appleGameButton.setPosition((int) ((LittleMonster.V_WIDTH / 2) - appleGameButton.getWidth() / 2), (int) ((LittleMonster.V_HEIGHT * 3 / 4) - appleGameButton.getHeight() / 2));

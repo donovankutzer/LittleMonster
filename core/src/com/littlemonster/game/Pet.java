@@ -1,6 +1,7 @@
 package com.littlemonster.game;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -18,6 +19,7 @@ public class Pet {
     private PetSprite sprite;
     private int numPoos;
     private boolean sleeping;
+    private boolean alive;
 
     public Pet() {
         energy = 5;
@@ -26,9 +28,10 @@ public class Pet {
         hygiene = 5;
         age = 0;
         weight = 0;
-        setSprite();
         numPoos = 0;
         sleeping = false;
+        alive = true;
+        setSprite();
     }
 
     public int getWeight() {
@@ -77,6 +80,10 @@ public class Pet {
 
     public void setPoos(int x) {
         numPoos = Math.min(4, x);
+    }
+
+    public int getAge() {
+        return age;
     }
 
     public void giveFood(FoodType food) {
@@ -129,10 +136,13 @@ public class Pet {
     }
 
     public void setSprite() {
-        if (age <= 0) sprite = PetSprite.Baby;
-        else if (age <= 5) sprite = PetSprite.Kid;
-        else if (age <= 10) sprite = PetSprite.Teenager;
-        else sprite = PetSprite.Teenager;
+        if (alive) {
+            if (age <= 0) sprite = PetSprite.Baby;
+            else if (age <= 5) sprite = PetSprite.Kid;
+            else if (age <= 10) sprite = PetSprite.Teenager;
+            else sprite = PetSprite.Teenager;
+        }
+        else sprite = PetSprite.Dead;
     }
 
     public String getSprite() {
@@ -144,7 +154,7 @@ public class Pet {
             case Teenager:
                 return "teenager.png";
         }
-        return "";
+        return "baby.png";
     }
 
     public void giveHappiness(int amount) {
@@ -156,6 +166,11 @@ public class Pet {
     }
 
     public void loadPet() throws IOException {
+        // Creates new file if none exists
+        File file = new File("pet.data");
+        if (file.createNewFile()) return;
+
+        // Loads if file exists
         String encrypted = new String(Files.readAllBytes(Paths.get("pet.data")));
         String[] data = encrypted.split("#");
         System.out.println(Arrays.toString(data));
@@ -166,12 +181,14 @@ public class Pet {
         hygiene = Integer.parseInt(data[4]);
         weight = Integer.parseInt(data[5]);
         numPoos = Integer.parseInt(data[6]);
+        alive = Boolean.valueOf(data[7]);
+
         setSprite();
     }
 
     public void savePet() {
 
-        String data = age + "#" + energy + "#" + happiness + "#" + hunger + "#" + hygiene + "#" + weight + "#" + numPoos;
+        String data = age + "#" + energy + "#" + happiness + "#" + hunger + "#" + hygiene + "#" + weight + "#" + numPoos + "#" + alive;
 
         try {
             Path path = Paths.get("pet.data");
@@ -185,17 +202,24 @@ public class Pet {
     }
 
     public void updateStats(int time) {
+        if (!alive) {
+            System.out.println("ded");
+            return;
+        }
         if (sleeping) {
             System.out.println("Sleeping stats updating");
+            energy = Math.min(energy + 1, 10);
             if (age % 10 == 0) setHunger(hunger - time);
             if (age % 30 == 0) setPoos(numPoos + 1);
+            if (energy < 10) giveHappiness(1);
         } else {
             setHunger(hunger - time);
             setHappiness(happiness - time);
             if (age % 10 == 0) setPoos(numPoos + 1);
         }
-        hygiene -= numPoos;
+        setHygiene(hygiene - numPoos);
         age += time;
+        if (age >= 100 || weight >= 100) alive = false;
         setSprite();
     }
 
@@ -207,4 +231,7 @@ public class Pet {
         sleeping = x;
     }
 
+    public boolean isAlive() {
+        return alive;
+    }
 }
