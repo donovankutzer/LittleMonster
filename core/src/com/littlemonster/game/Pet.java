@@ -71,7 +71,7 @@ public class Pet {
     }
 
     public void setHygiene(int hygiene) {
-        this.hygiene = hygiene;
+        this.hygiene = Math.max(0, hygiene);
     }
 
     public int getPoos() {
@@ -133,13 +133,14 @@ public class Pet {
         if (hunger > 10) hunger = 10;
         if (energy > 10) energy = 10;
         if (happiness > 10) happiness = 10;
+        updateStats(0);
     }
 
     public void setSprite() {
         if (alive) {
-            if (age <= 0) sprite = PetSprite.Baby;
-            else if (age <= 5) sprite = PetSprite.Kid;
-            else if (age <= 10) sprite = PetSprite.Teenager;
+            if (age <= 10) sprite = PetSprite.Baby;
+            else if (age <= 20) sprite = PetSprite.Kid;
+            else if (age <= 50) sprite = PetSprite.Teenager;
             else sprite = PetSprite.Teenager;
         }
         else sprite = PetSprite.Dead;
@@ -181,7 +182,7 @@ public class Pet {
         hygiene = Integer.parseInt(data[4]);
         weight = Integer.parseInt(data[5]);
         numPoos = Integer.parseInt(data[6]);
-        alive = Boolean.valueOf(data[7]);
+        alive = Boolean.parseBoolean(data[7]);
 
         setSprite();
     }
@@ -215,9 +216,10 @@ public class Pet {
         } else {
             setHunger(hunger - time);
             setHappiness(happiness - time);
+            if (age % 5  == 0) energy = Math.max(0, energy - 1);
             if (age % 10 == 0) setPoos(numPoos + 1);
         }
-        setHygiene(hygiene - numPoos);
+        setHygiene(hygiene - numPoos * time);
         age += time;
         if (age >= 100 || weight >= 100) alive = false;
         setSprite();

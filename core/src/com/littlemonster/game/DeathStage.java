@@ -35,7 +35,7 @@ public class DeathStage extends Stage {
         weight.setPosition(0, 400);
 
         restartButton = new TextButton("Restart", game.textButtonStyle);
-        restartButton.setPosition((int) (LittleMonster.V_WIDTH / 2) , 200, Align.center);
+        restartButton.setPosition(LittleMonster.V_WIDTH / 2 , 200, Align.center);
         restartButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -48,6 +48,11 @@ public class DeathStage extends Stage {
         addActor(age);
         addActor(weight);
         addActor(restartButton);
+    }
+
+    public void update(){
+        age.text = String.valueOf(game.pet.getAge());
+        weight.text = String.valueOf(game.pet.getWeight());
     }
 
 }

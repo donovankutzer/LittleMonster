@@ -44,4 +44,9 @@ public class StatsStage extends MenuButtonsScreen {
             }
         });
     }
+
+    public void update(){
+        age.text = String.valueOf(super.game.pet.getAge());
+        weight.text = String.valueOf(super.game.pet.getWeight());
+    }
 }

@@ -42,6 +42,7 @@ public class MainScreen implements Screen {
 
         petStats = new ShapeRenderer();
 
+        // Set stage to main stage and update all stages
         stage = mainStage;
         updateStages();
 
@@ -50,6 +51,7 @@ public class MainScreen implements Screen {
     }
 
     public void changeStage(StageType stage) {
+        // Make all stages current before changing
         updateStages();
         switch (stage) {
             case MainStage:
@@ -75,6 +77,7 @@ public class MainScreen implements Screen {
                 this.stage = deathStage;
                 break;
         }
+        // Changes input to current stage
         Gdx.input.setInputProcessor(this.stage);
     }
 
@@ -82,24 +85,28 @@ public class MainScreen implements Screen {
     public void checkTime() {
         game.currentTime = System.currentTimeMillis();
         game.elapsedTime = game.currentTime - game.startTime;
+
+        // Forces stage change if dead
+        if (stage != deathStage && !game.pet.isAlive()) {
+            updateStages();
+            System.out.println("Changing stage");
+            changeStage(StageType.DeathStage);
+        }
+
         // If 1 minute has passed
         if (game.elapsedTime / 1000 > 60) {
             game.pet.updateStats((int) (game.elapsedTime / 1000 / 60));
             // Resets elapsed time to 0
             game.startTime = game.currentTime;
-
             updateStages();
 
-            // Forces stage change if dead
-            if (stage != deathStage && !game.pet.isAlive()) {
-                System.out.println("Changing stage");
-                changeStage(StageType.DeathStage);
-            }
         }
     }
 
     public void updateStages(){
         mainStage.update();
+        statsStage.update();
+        deathStage.update();
     }
 
     @Override
@@ -107,6 +114,7 @@ public class MainScreen implements Screen {
 
         // Draws Stage and acts if needed
         stage.act(Gdx.graphics.getDeltaTime());
+        // Will update stages and pet if needed
         checkTime();
         stage.draw();
 

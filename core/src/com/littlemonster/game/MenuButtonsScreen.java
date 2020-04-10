@@ -107,6 +107,7 @@ public class MenuButtonsScreen extends Stage {
         statsButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                mainScreen.updateStages();
                 mainScreen.changeStage(StageType.StatsStage);
             }
         });
